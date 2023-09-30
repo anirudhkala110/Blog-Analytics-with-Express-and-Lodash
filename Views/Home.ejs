@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        Home page
+        <br />
+        <a href="/api/blog-stats"><button>All Blogs Click Me</button></a>
+        <form id="search-form">
+            <input type="text" id="search-query"
+                placeholder="Enter your search query">
+            <button type="submit">Search</button>
+        </form>
+    </body>
+    <script>
+        // Get references to the form and input field
+const searchForm = document.getElementById('search-form');
+const searchQueryInput = document.getElementById('search-query');
+
+// Add a form submission event listener
+searchForm.addEventListener('submit', (event) => {
+    event.preventDefault(); // Prevent the default form submission behavior
+    // Get the user's search query
+    alert("Worked . . ")
+    const query = searchQueryInput.value;
+    if(query===null || query===''){
+    alert("Please enter keyword to search something . . ")
+}
+    else{// Construct the URL with the query parameter
+    const searchUrl = `/api/blog-search?query=${encodeURIComponent(query)}`;
+    window.location.href = searchUrl;
+    }
+    // Redirect to the search URL
+});
+
+    </script>
+</html>

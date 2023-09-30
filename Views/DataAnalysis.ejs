@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link rel="stylesheet" href="DataAnalysis.css">
+    </head>
+    <body style="background: rgba(228, 233, 233, 0.767);">
+        <h1>Blog Analytics</h1>
+        <div id="analytics" style="background: red;">
+            <p>Total Blogs: <span><%= totalBlogs %></span></p>
+            <p>
+                <% if (longestTitle && longestTitle.title) { %>
+                Blog with Longest Title: <span><%= longestTitle.title %></span>
+                <% } else { %>
+                Blog with Longest Title: <span>N/A</span>
+                <% } %>
+            </p>
+            <p>Blogs with "privacy" in Title: <span><%= privacyBlogs %></span></p>
+        </div>
+        <!-- <a href="/api/blog-search"> <button>Search here</button></a> -->
+
+        <center> <h2 class
+                style="border: 2px solid ; padding-top: 15px;padding-bottom:15px;border-radius:8px">Unique
+                Blog
+                Titles</h2></center>
+        <ul>
+            <div style="display:contents;">
+                <% blogData.forEach((blog,i) => { %>
+                <div
+                    style="border-radius:10px;border: 2px solid;font-size:20px;margin:10px auto; padding-top:2%;padding-right: auto;padding-bottom: 2%;padding-left: 2%">
+                    <%= i+1 %>
+                    <%= blog.title %>
+                    <br>
+                    <img src="<%= blog.image_url %>" alt="<%= blog.title %>"
+                        width="100" height="100"
+                        style="margin-top:10px;border-radius:8px">
+                </div>
+                <% }); %>
+            </div>
+        </ul>
+    </body>
+</html>
