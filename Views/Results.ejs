@@ -9,7 +9,7 @@
     <body style="background: rgba(228, 233, 233, 0.767);">
         <h1>Blog Analytics</h1>
         <div style="display:contents;">
-            <% results.forEach((blog,i) => { %>
+            <%= results.forEach((blog,i) => { %>
             <div
                 style="border-radius:10px;border: 2px solid;font-size:20px;margin:10px auto; padding-top:2%;padding-right: auto;padding-bottom: 2%;padding-left: 2%">
                 <%= i+1 %>
@@ -22,24 +22,5 @@
             <% }); %>
         </div>
     </body>
-    <script>
-        // Get references to the form and input field
-const searchForm = document.getElementById('search-form');
-const searchQueryInput = document.getElementById('search-query');
 
-// Add a form submission event listener
-searchForm.addEventListener('submit', (event) => {
-    event.preventDefault(); // Prevent the default form submission behavior
-alert("Working")
-    // Get the user's search query
-    const query = searchQueryInput.value;
-
-    // Construct the URL with the query parameter
-    const searchUrl = `/api/blog-search?query=${encodeURIComponent(query)}`;
-
-    // Redirect to the search URL
-    window.location.href = searchUrl;
-});
-
-    </script>
 </html>
