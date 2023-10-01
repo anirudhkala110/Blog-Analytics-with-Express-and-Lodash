@@ -18,100 +18,100 @@ let cache = {
     searchResults: new Map(),
 };
 
-const fetchAndAnalyzeBlogData = async () => {
-    try {
-        // Fetch data from the third-party blog API
-        const response = await axios.get('https://intent-kit-16.hasura.app/api/rest/blogs', {
-            headers: {
-                'x-hasura-admin-secret': '32qR4KmXOIpsGPQKMqEJHGJS27G5s7HdSKO3gdtQd2kv5e852SiYwWNfxkZOBuQ6'
-            }
-        });
+// const fetchAndAnalyzeBlogData = async () => {
+//     try {
+//         // Fetch data from the third-party blog API
+//         const response = await axios.get('https://intent-kit-16.hasura.app/api/rest/blogs', {
+//             headers: {
+//                 'x-hasura-admin-secret': '32qR4KmXOIpsGPQKMqEJHGJS27G5s7HdSKO3gdtQd2kv5e852SiYwWNfxkZOBuQ6'
+//             }
+//         });
 
-        // Handle the response and extract data
-        blogData = response.data.blogs;
+//         // Handle the response and extract data
+//         blogData = response.data.blogs;
 
-        // Perform data analysis using Lodash
-        const totalBlogs = blogData.length;
-        const blogWithLongestTitle = _.maxBy(blogData, (blog) => blog.title.length);
-        const blogsWithPrivacyTitle = _.filter(blogData, (blog) =>
-            _.includes(_.toLower(blog.title), 'privacy')
-        );
-        const uniqueBlogTitles = _.uniqBy(blogData, 'title');
+//         // Perform data analysis using Lodash
+//         const totalBlogs = blogData.length;
+//         const blogWithLongestTitle = _.maxBy(blogData, (blog) => blog.title.length);
+//         const blogsWithPrivacyTitle = _.filter(blogData, (blog) =>
+//             _.includes(_.toLower(blog.title), 'privacy')
+//         );
+//         const uniqueBlogTitles = _.uniqBy(blogData, 'title');
 
-        // Prepare the analytics results as an object
-        const analyticsResults = {
-            totalBlogs: totalBlogs,
-            longestTitle: blogWithLongestTitle,
-            privacyBlogs: blogsWithPrivacyTitle.length,
-            uniqueBlogTitles: uniqueBlogTitles,
-            blogData: blogData
-        };
+//         // Prepare the analytics results as an object
+//         const analyticsResults = {
+//             totalBlogs: totalBlogs,
+//             longestTitle: blogWithLongestTitle,
+//             privacyBlogs: blogsWithPrivacyTitle.length,
+//             uniqueBlogTitles: uniqueBlogTitles,
+//             blogData: blogData
+//         };
 
-        // Cache the results
-        cache.blogStats = analyticsResults;
+//         // Cache the results
+//         cache.blogStats = analyticsResults;
 
-        return analyticsResults;
-    } catch (error) {
-        console.error('Error fetching or analyzing blog data:', error);
-        throw error; // Re-throw the error to be handled in the route handler
-    }
-};
+//         return analyticsResults;
+//     } catch (error) {
+//         console.error('Error fetching or analyzing blog data:', error);
+//         throw error; // Re-throw the error to be handled in the route handler
+//     }
+// };
 
 app.get('/', (req, res) => {
     res.render('Home')
 })
-app.get('/api/blog-stats', async (req, res) => {
-    try {
-        if (cache.blogStats) {
-            // If the data is cached, use it
-            res.render('DataAnalysis', cache.blogStats);
-        } else {
-            // Otherwise, fetch and analyze the data
-            const analyticsResults = await fetchAndAnalyzeBlogData();
-            res.render('DataAnalysis', {
-                totalBlogs: analyticsResults.totalBlogs,
-                longestTitle: analyticsResults.longestTitle,
-                privacyBlogs: analyticsResults.privacyBlogs,
-                uniqueBlogTitles: analyticsResults.uniqueBlogTitles,
-                blogData: blogData
-            });
-        }
-    } catch (error) {
-        console.error('Error fetching or analyzing blog data:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
+// app.get('/api/blog-stats', async (req, res) => {
+//     try {
+//         if (cache.blogStats) {
+//             // If the data is cached, use it
+//             res.render('DataAnalysis', cache.blogStats);
+//         } else {
+//             // Otherwise, fetch and analyze the data
+//             const analyticsResults = await fetchAndAnalyzeBlogData();
+//             res.render('DataAnalysis', {
+//                 totalBlogs: analyticsResults.totalBlogs,
+//                 longestTitle: analyticsResults.longestTitle,
+//                 privacyBlogs: analyticsResults.privacyBlogs,
+//                 uniqueBlogTitles: analyticsResults.uniqueBlogTitles,
+//                 blogData: blogData
+//             });
+//         }
+//     } catch (error) {
+//         console.error('Error fetching or analyzing blog data:', error);
+//         res.status(500).json({ error: 'Internal Server Error' });
+//     }
+// });
 
-app.get('/api/blog-search', (req, res) => {
-    try {
-        const query = req.query.query;
+// app.get('/api/blog-search', (req, res) => {
+//     try {
+//         const query = req.query.query;
 
-        if (!query) {
-            return res.status(400).json({ error: 'Query parameter "query" is required.' });
-        }
+//         if (!query) {
+//             return res.status(400).json({ error: 'Query parameter "query" is required.' });
+//         }
 
-        // Check if the query result is cached
-        if (cache.searchResults.has(query)) {
-            res.render('Results', { results: cache.searchResults.get(query) });
-        } else {
-            // Implement the search functionality by filtering the blogs
-            const filteredBlogs = blogData.filter((blog) =>
-                blog.title.toLowerCase().includes(query.toLowerCase())
-            );
+//         // Check if the query result is cached
+//         if (cache.searchResults.has(query)) {
+//             res.render('Results', { results: cache.searchResults.get(query) });
+//         } else {
+//             // Implement the search functionality by filtering the blogs
+//             const filteredBlogs = blogData.filter((blog) =>
+//                 blog.title.toLowerCase().includes(query.toLowerCase())
+//             );
 
-            // Cache the search results
-            cache.searchResults.set(query, filteredBlogs);
+//             // Cache the search results
+//             cache.searchResults.set(query, filteredBlogs);
 
-            res.render('Results', { results: filteredBlogs });
-        }
-    } catch (error) {
-        console.error('Error searching for blogs:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
+//             res.render('Results', { results: filteredBlogs });
+//         }
+//     } catch (error) {
+//         console.error('Error searching for blogs:', error);
+//         res.status(500).json({ error: 'Internal Server Error' });
+//     }
+// });
 
 
-/* Memoization Method */
+/* Memoization Method implemented */
 
 
 /* Normal method */
